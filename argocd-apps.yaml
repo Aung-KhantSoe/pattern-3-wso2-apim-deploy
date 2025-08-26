@@ -1,0 +1,93 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 15.5.26
+    helm:
+      valueFiles:
+        - postgres/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apim-acp
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_GITHUB/my-wso2-deployment.git
+    targetRevision: main
+    path: apim-acp
+    helm:
+      valueFiles:
+        - values.yaml
+    chart: wso2/wso2am-acp
+    targetRevision: 4.5.0-3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: wso2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apim-tm
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_GITHUB/my-wso2-deployment.git
+    targetRevision: main
+    path: apim-tm
+    helm:
+      valueFiles:
+        - values.yaml
+    chart: wso2/wso2am-tm
+    targetRevision: 4.5.0-3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: wso2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apim-gw
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_GITHUB/my-wso2-deployment.git
+    targetRevision: main
+    path: apim-gw
+    helm:
+      valueFiles:
+        - values.yaml
+    chart: wso2/wso2am-universal-gw
+    targetRevision: 4.5.0-3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: wso2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
